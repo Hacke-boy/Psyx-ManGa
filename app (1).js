@@ -1,6 +1,27 @@
 /* PSYX-MANGA v3 | app.js */
 'use strict';
 
+// Masquage du loader
+window.addEventListener('load', function() {
+    const loader = document.getElementById('loader');
+    if (loader) {
+      loader.style.transition = "opacity 0.8s ease";
+      loader.style.opacity = "0";
+      setTimeout(() => {
+        loader.style.display = "none";
+      }, 800);
+    }
+});
+
+// Sécurité : si la page met trop de temps, on force la fermeture après 4s
+setTimeout(() => {
+    const loader = document.getElementById('loader');
+    if (loader && loader.style.display !== "none") {
+        loader.style.display = "none";
+    }
+}, 4000);
+
+
 // ══════════════════════════════════════════
 //  1. LOADER — tue immédiatement, sans dépendance
 // ══════════════════════════════════════════
