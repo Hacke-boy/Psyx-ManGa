@@ -1,42 +1,37 @@
-/* PSYX-MANGA v3 | app.js */
-'use strict';
+/* =================================================
+   PSYX-MANGA | app.js 
+   FORCE LOAD RECOVERY
+==================================================== */
 
-// Masquage du loader
-window.addEventListener('load', function() {
-    const loader = document.getElementById('loader');
-    if (loader) {
-      loader.style.transition = "opacity 0.8s ease";
-      loader.style.opacity = "0";
-      setTimeout(() => {
-        loader.style.display = "none";
-      }, 800);
+(function() {
+    // Cette fonction s'exécute immédiatement
+    const forceKillLoader = () => {
+        const loader = document.querySelector('#loader'); // Utilise querySelector pour plus de flexibilité
+        if (loader) {
+            console.log("Tentative de suppression du loader...");
+            loader.style.opacity = "0";
+            loader.style.pointerEvents = "none";
+            
+            // On le retire carrément du DOM après l'animation
+            setTimeout(() => {
+                loader.remove(); 
+                document.body.style.overflow = "auto"; // Réactive le scroll si bloqué
+            }, 600);
+        }
+    };
+
+    // 1. Essayer dès que le HTML est lu
+    if (document.readyState === 'complete') {
+        forceKillLoader();
+    } else {
+        // 2. Essayer au chargement complet
+        window.addEventListener('load', forceKillLoader);
+        
+        // 3. Filet de sécurité ultra-rapide (2 secondes maximum)
+        setTimeout(forceKillLoader, 2000);
     }
-});
-
-// Sécurité : si la page met trop de temps, on force la fermeture après 4s
-setTimeout(() => {
-    const loader = document.getElementById('loader');
-    if (loader && loader.style.display !== "none") {
-        loader.style.display = "none";
-    }
-}, 4000);
-
-
-// ══════════════════════════════════════════
-//  1. LOADER — tue immédiatement, sans dépendance
-// ══════════════════════════════════════════
-(function hideLoader() {
-  function kill() {
-    var el = document.getElementById('loader');
-    if (el) el.classList.add('hide');
-  }
-  // Option A : DOMContentLoaded
-  document.addEventListener('DOMContentLoaded', function () { setTimeout(kill, 1900); });
-  // Option B : window.load
-  window.addEventListener('load', function () { setTimeout(kill, 400); });
-  // Option C : filet absolu, 3s max
-  setTimeout(kill, 3000);
 })();
+
 
 // ══════════════════════════════════════════
 //  2. DONNÉES
